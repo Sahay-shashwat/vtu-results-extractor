@@ -1,0 +1,14 @@
+body {
+  background-color: #191a1f;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
