@@ -1,7 +1,11 @@
 from bs4 import BeautifulSoup
+import xlsxwriter
+
+workbook = xlsxwriter.Workbook('demo.xlsx')
+worksheet = workbook.add_worksheet()
 
 z = ''
-with open('reg.html', 'r', encoding='utf-8') as f:
+with open('test_files/reg.html', 'r', encoding='utf-8') as f:
     z = f.read()
 
 soup = BeautifulSoup(z, 'lxml')
@@ -17,10 +21,14 @@ print(usn.strip())
 
 # Iterating through every semester and fetching details
 for i in range(1, len(tables)):
-    for sem in tables[i].find_all('b'):
-        print(sem.text)
-        marksTable = sem.parent.find_next_sibling()
-        tableRow = marksTable.find_all('div', {'class': 'divTableRow'})
-        for row in range(1, len(tableRow)):
-            for cell in tableRow[row].find_all('div', {'class': 'divTableCell'}):
-                print(cell.text.strip())
+    semester = tables[i].find_all('b')[0]
+    sem = semester.get_text().replace('Semester : ', '')
+    print(sem)
+    marksTable = semester.parent.find_next_sibling()
+    tableRow = marksTable.find_all('div', {'class': 'divTableRow'})
+    for row in range(1, len(tableRow)):
+        cells = tableRow[row].find_all('div', {'class': 'divTableCell'})
+        for k in range(len(cells)):
+            worksheet.write(0, k, cells[k].text.strip())
+            # print(cell.text.strip())
+workbook.close()
