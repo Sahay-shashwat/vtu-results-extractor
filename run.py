@@ -1,3 +1,4 @@
+from email.mime import base
 import requests
 from bs4 import BeautifulSoup
 import pytesseract
@@ -6,11 +7,14 @@ from wand.image import Image as wimg
 import numpy
 import io
 import re
+from urllib.parse import urljoin
 
 
 class Extractor:
-    def __init__(self):
+    def __init__(self, baseDomain):
         try:
+            # Initializing important vars
+            self.baseDomain = baseDomain
             self.tesseractPath = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
             self.session = requests.Session()
             self.headers = {
@@ -19,14 +23,36 @@ class Extractor:
         except:
             print("Error while initializing extractor!")
 
-    def decodeCaptcha(self, blob):
-        pass
-
-    def parseIndexPage(self, url):
+    def decodeCaptcha(self):
         try:
+            # Fetching captcha image
+            captchaUrl = urljoin(self.baseDomain, self.img_src)
+            captchaPage = self.session.get(
+                captchaUrl, headers=self.headers, verify=False)
+            pic = wimg(blob=captchaPage.content)
+            # Modifying Image to prepare for OCR
+            pic.modulate(120)
+            pic.modulate(150)
+            pic.modulate(130)
+            img_buffer = numpy.asarray(
+                bytearray(pic.make_blob(format='png')), dtype='uint8')
+            bytesio = io.BytesIO(img_buffer)
+            # Performing OCR on image
+            pil_img = pimg.open(bytesio)
+            captcha_code = re.sub(
+                '[\W_]+', '', pytesseract.image_to_string(pil_img))
+            return captcha_code
+        except:
+            print("Error occured while decoding captcha!")
+
+    def parseIndexPage(self, indexUrl):
+        try:
+            # Fetching index page [where you enter USN]
+            indexUrl = urljoin(self.baseDomain, indexUrl)
             indexPage = self.session.get(
-                url, headers=self.headers, verify=False)
+                indexUrl, headers=self.headers, verify=False)
             soup = BeautifulSoup(indexPage.content, "html.parser")
+            # Setting important values
             self.img_src = soup.find(alt="CAPTCHA code")['src']
             self.token = soup.find('input')['value']
         except:
