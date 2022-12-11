@@ -74,7 +74,7 @@ class Extractor:
         whitespaceRegEx = re.compile(r'\s+')
         try:
             # Making sure the result page is fetched
-            if ((len(resultPage.text) > 500) and (self.indexPage == resultPage.text)):
+            if ((len(resultPage.text) > 500) and (self.indexPage != resultPage.text) and resultPage.ok):
                 # Adding records to DB after parsing result page
                 tables = soup.find_all(
                     'div', {"class": "col-md-12 table-responsive"})
