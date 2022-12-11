@@ -8,6 +8,7 @@ h1 {
   font-size: 30px;
   letter-spacing: 1px;
   font-weight: 700;
+  margin-bottom: 10%;
 }
 .main {
   display: flex;
@@ -50,7 +51,7 @@ input:focus {
   cursor: pointer;
   padding: 7px 40px;
   display: inline-block;
-  margin: 10px 30px;
+  margin: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 700;
@@ -114,4 +115,21 @@ a {
 a:hover {
   font-size: 21px;
   transition: all 1s;
+}
+.credits {
+  margin-top: 10%;
+}
+
+.row {
+  margin-top: 10%;
+  margin-bottom: 10%;
+}
+
+table,
+td,
+th {
+  border: 1px solid #fff;
+  border-collapse: collapse;
+  font-size: 21px;
+  margin-bottom: 10px;
 }
