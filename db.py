@@ -104,24 +104,14 @@ class Database:
     def findMaxSem(self, usn, reval):
         try:
             if not reval:
-                statement = f'SELECT max(sem) from reg WHERE usn="{usn}"'
+                statement = f'SELECT max(sem) from reg WHERE usn="{usn}" AND date="{str(date.today())}"'
             else:
-                statement = f'SELECT max(sem) from rev WHERE usn="{usn}"'
+                statement = f'SELECT max(sem) from rev WHERE usn="{usn}" AND date="{str(date.today())}"'
+
             self.curr.execute(statement)
             return self.curr.fetchall()
         except:
             print('Error occured fetching max sem')
-
-    def doesEntryExist(self, usn, sem, sub, reval, date):
-        try:
-            if not reval:
-                statement = f'SELECT * from reg WHERE usn="{usn}" AND sem={sem} AND date="{date}" AND sub_code="{sub}"'
-            else:
-                statement = f'SELECT * from rev WHERE usn="{usn}" AND sem={sem} AND date="{date}" AND sub_code="{sub}"'
-            self.curr.execute(statement)
-            return bool(self.curr.fetchall())
-        except:
-            print("Error occured while checking if entry exists!")
 
     def __del__(self):
         try:
