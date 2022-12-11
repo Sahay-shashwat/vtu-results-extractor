@@ -19,7 +19,9 @@ class Extractor:
         try:
             # Initializing important vars
             self.baseDomain = baseDomain
-            self.tesseractPath = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+            # Only windows needs this binary
+            if os.name == 'nt':
+                self.tesseractPath = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
             self.session = requests.Session()
             self.headers = {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
