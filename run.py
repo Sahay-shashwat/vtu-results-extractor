@@ -86,7 +86,8 @@ class Extractor:
                 # Iterating through every semester and fetching details for both reval and reg
                 for i in range(1, len(tables)):
                     semester = tables[i].find_all('b')[0]
-                    sem = semester.get_text().replace('Semester : ', '')
+                    sem = whitespaceRegEx.sub(' ', semester.get_text()
+                                              ).replace('Semester : ', '').strip()
                     marksTable = semester.parent.find_next_sibling()
                     tableRow = marksTable.find_all(
                         'div', {'class': 'divTableRow'})
@@ -104,8 +105,8 @@ class Extractor:
                 # Retry if captcha is wrong else USN is invalid
                 if(len(resultPage.text) < 130):
                     self.extract(usn, reval)
-        except:
-            print("Error occured while parsing result!")
+        except Exception as e:
+            print("Error occured while parsing result!", e)
 
     def extract(self, usn, reval):
         try:
