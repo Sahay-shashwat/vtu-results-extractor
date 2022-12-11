@@ -41,10 +41,11 @@ function extract()
     {
         eel.extract(usn, resultLink)(function (ret)
         {
-            console.log(ret);
             if (ret.status)
             {
-                toastr["success"]("", `${ret.len} USN's extracted!`);
+                localStorage.setItem('skipped', ret.skipped)
+                localStorage.setItem('len', ret.len)
+                window.location.replace('done.html')
             }
             else
             {
@@ -64,9 +65,18 @@ function generate()
     }
     else
     {
-        eel.main(usn, resultLink)(function (ret)
+        eel.generate(usn)(function (ret)
         {
-            alert(ret);
+            if (ret.status)
+            {
+                localStorage.setItem('skipped', ret.skipped)
+                localStorage.setItem('len', ret.len)
+                window.location.replace('done.html')
+            }
+            else
+            {
+                toastr["error"]("", "Error occured while generating!");
+            }
         });
     }
 }
