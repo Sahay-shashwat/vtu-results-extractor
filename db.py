@@ -54,7 +54,7 @@ class Database:
             data = (usn, name, sem, *args, date.today())
             if not reval:
                 self.curr.execute('''
-                INSERT INTO reg(
+                INSERT OR IGNORE INTO reg(
                     usn,
                     name, 
                     sem, 
@@ -70,7 +70,7 @@ class Database:
                 ''', data)
             else:
                 self.curr.execute('''
-                INSERT INTO rev(
+                INSERT OR IGNORE INTO rev(
                     usn,
                     name,
                     sem, 
@@ -92,11 +92,25 @@ class Database:
 
     def getData(self, usn, reval, sem, date):
         try:
-            statement = f'SELECT * from reg WHERE usn="{usn}" AND sem={sem} AND date="{date}"'
+            if not reval:
+                statement = f'SELECT * from reg WHERE usn="{usn}" AND sem={sem} AND date="{date}"'
+            else:
+                statement = f'SELECT * from rev WHERE usn="{usn}" AND sem={sem} AND date="{date}"'
             self.curr.execute(statement)
             return self.curr.fetchall()
         except:
             print("Error occured while selecting data!")
+
+    def findMaxSem(self, usn, reval):
+        try:
+            if not reval:
+                statement = f'SELECT max(sem) from reg WHERE usn="{usn}"'
+            else:
+                statement = f'SELECT max(sem) from rev WHERE usn="{usn}"'
+            self.curr.execute(statement)
+            return self.curr.fetchall()
+        except:
+            print('Error occured fetching max sem')
 
     def __del__(self):
         try:
