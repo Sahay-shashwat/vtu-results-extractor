@@ -47,7 +47,6 @@ class Extractor:
             bytesio = io.BytesIO(img_buffer)
             # Performing OCR on image
             pil_img = pimg.open(bytesio)
-            pil_img.show()
             captcha_code = re.sub(
                 '[\W_]+', '', pytesseract.image_to_string(pil_img))
             self.captchaCode = captcha_code
@@ -112,7 +111,6 @@ class Extractor:
         try:
             self.parseIndexPage()
             self.decodeCaptcha()
-            print(self.captchaCode)
             self.parseResultPage(usn, reval)
         except Exception as e:
             print('Error occured while performing extraction!', e)
