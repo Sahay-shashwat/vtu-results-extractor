@@ -111,3 +111,7 @@ a {
   color: #fff;
   border-bottom: 2px dashed #fff;
 }
+a:hover {
+  font-size: 21px;
+  transition: all 1s;
+}
