@@ -54,3 +54,19 @@ function extract()
     }
 
 }
+
+function generate()
+{
+    var usn = document.getElementById('usn').value;
+    if (!/^\w+(,\w+)*$/.test(usn))
+    {
+        toastr["error"]("", "Please enter valid USN's!");
+    }
+    else
+    {
+        eel.main(usn, resultLink)(function (ret)
+        {
+            alert(ret);
+        });
+    }
+}
