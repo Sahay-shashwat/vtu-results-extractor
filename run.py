@@ -11,6 +11,7 @@ import re
 from urllib.parse import urljoin
 from db import Database
 import os
+from requests.packages import urllib3
 
 
 class Extractor:
@@ -25,6 +26,7 @@ class Extractor:
             pytesseract.pytesseract.tesseract_cmd = self.tesseractPath
             self.indexUrl = urljoin(self.baseDomain, indexUrl)
             self.resultUrl = urljoin(self.baseDomain, resultUrl)
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             self.db = Database(os.getcwd())
         except:
             print("Error while initializing extractor!")
