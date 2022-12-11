@@ -14,7 +14,6 @@ class Database:
             # Creating tables for reval and reg because they have different formats
             self.curr.execute('''
                 CREATE TABLE IF NOT EXISTS reg(
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                     usn varchar(20) NOT NULL,
                     name varchar(200) NOT NULL,
                     sem int NOT NULL, 
@@ -25,11 +24,11 @@ class Database:
                     total int NOT NULL,
                     result varchar(3) NOT NULL,
                     announced date,
-                    date date);
+                    date date,
+                    PRIMARY KEY(usn,name,sub_code,sub_name,internal,external,total,result,announced,date));
             ''')
             self.curr.execute('''
                 CREATE TABLE IF NOT EXISTS rev(
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                     usn varchar(20) NOT NULL,
                     name varchar(200) NOT NULL,
                     sem int NOT NULL, 
@@ -42,7 +41,8 @@ class Database:
                     rv_res varchar(3) NOT NULL,
                     final_m int NOT NULL,
                     final_res varchar(3) NOT NULL,
-                    date date NOT NULL);
+                    date date NOT NULL,
+                    PRIMARY KEY(usn,name,sem,sub_code,sub_name,internal,old_m,old_res,rv_m,rv_res,final_m,final_res,date));
 ''')
             self.conn.commit()
         except:
@@ -112,10 +112,14 @@ class Database:
         except:
             print('Error occured fetching max sem')
 
-    def doesEntryExist(self, usn, sem, reval, date):
+    def doesEntryExist(self, usn, sem, sub, reval, date):
         try:
-            data = self.getData(usn, reval, sem, date)
-            return bool(data)
+            if not reval:
+                statement = f'SELECT * from reg WHERE usn="{usn}" AND sem={sem} AND date="{date}" AND sub_code="{sub}"'
+            else:
+                statement = f'SELECT * from rev WHERE usn="{usn}" AND sem={sem} AND date="{date}" AND sub_code="{sub}"'
+            self.curr.execute(statement)
+            return bool(self.curr.fetchall())
         except:
             print("Error occured while checking if entry exists!")
 
