@@ -90,6 +90,14 @@ class Database:
         except Exception as e:
             print(f"Error occured with inserting record! {e}")
 
+    def getData(self, usn, reval, sem, date):
+        try:
+            statement = f'SELECT * from reg WHERE usn="{usn}" AND sem={sem} AND date="{date}"'
+            self.curr.execute(statement)
+            return self.curr.fetchall()
+        except:
+            print("Error occured while selecting data!")
+
     def __del__(self):
         try:
             # Destructor will close db
