@@ -63,6 +63,7 @@ class Extractor:
             # Setting important values
             self.img_src = soup.find(alt="CAPTCHA code")['src']
             self.token = soup.find('input')['value']
+            self.indexPage = indexPage.text
         except:
             print("Error while parsing Index page!")
 
@@ -73,7 +74,8 @@ class Extractor:
         whitespaceRegEx = re.compile(r'\s+')
         try:
             # Making sure the result page is fetched
-            if (len(resultPage.text) > 500):            # Adding records to DB after parsing result page
+            if ((len(resultPage.text) > 500) and (self.indexPage == resultPage.text)):
+                # Adding records to DB after parsing result page
                 tables = soup.find_all(
                     'div', {"class": "col-md-12 table-responsive"})
                 # Fetching Student Details

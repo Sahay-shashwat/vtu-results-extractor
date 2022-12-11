@@ -18,12 +18,16 @@ class File:
 
     def addData(self, data):
         # Manipulating data from db to insert
-        usn = data[0][1]
-        name = data[0][2]
-        sem = data[0][3]
-        data = [ele for row in data for ele in row[4:-1]]
-        data.insert(0, usn)
-        data.insert(1, name)
-        data.insert(2, sem)
-        with open(os.path.join(self.path, self.name), 'a') as csvfile:
-            csvwriter = csv.writer(csvfile).writerow(data)
+        try:
+            if len(data) > 3:
+                usn = data[0][1]
+                name = data[0][2]
+                sem = data[0][3]
+                data = [ele for row in data for ele in row[4:-1]]
+                data.insert(0, usn)
+                data.insert(1, name)
+                data.insert(2, sem)
+                with open(os.path.join(self.path, self.name), 'a') as csvfile:
+                    csv.writer(csvfile).writerow(data)
+        except:
+            print("Error occured while writing data!")
