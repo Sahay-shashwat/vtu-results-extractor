@@ -88,12 +88,14 @@ class Extractor:
                     semester = tables[i].find_all('b')[0]
                     sem = whitespaceRegEx.sub(' ', semester.get_text()
                                               ).replace('Semester : ', '').strip()
-                    marksTable = semester.parent.find_next_sibling()
+                    # Reval results have a span tag to semester number
+                    if reval:
+                        marksTable = semester.parent.parent.find_next_sibling()
+                    else:
+                        marksTable = semester.parent.find_next_sibling()
                     tableRow = marksTable.find_all(
                         'div', {'class': 'divTableRow'})
-                    excelCellNumber = 2
                     for row in range(1, len(tableRow)):
-                        excelCellNumber += 1
                         cells = tableRow[row].find_all(
                             'div', {'class': 'divTableCell'})
                         cellData = [whitespaceRegEx.sub(
