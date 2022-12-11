@@ -112,6 +112,13 @@ class Database:
         except:
             print('Error occured fetching max sem')
 
+    def doesEntryExist(self, usn, sem, reval, date):
+        try:
+            data = self.getData(usn, reval, sem, date)
+            return bool(data)
+        except:
+            print("Error occured while checking if entry exists!")
+
     def __del__(self):
         try:
             # Destructor will close db
