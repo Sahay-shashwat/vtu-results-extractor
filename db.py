@@ -6,10 +6,12 @@ from datetime import date
 
 class Database:
     def __init__(self, path):
+        # Initializing important vars
         self.path = path
         self.conn = sqlite3.connect(os.path.join(self.path, 'sem.db'))
         self.curr = self.conn.cursor()
         try:
+            # Creating tables for reval and reg because they have different formats
             self.curr.execute('''
                 CREATE TABLE IF NOT EXISTS reg(
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,8 +50,8 @@ class Database:
 
     def insertRecord(self, reval, usn, name, sem, *args):
         try:
-            z = (usn, name, sem, *args, date.today())
-            # print(z)
+            # Making data tuple with *args to make a common insert function
+            data = (usn, name, sem, *args, date.today())
             if not reval:
                 self.curr.execute('''
                 INSERT INTO reg(
@@ -65,7 +67,7 @@ class Database:
                     announced, 
                     date) 
                     values(?,?,?,?,?,?,?,?,?,?,?);
-                ''', z)
+                ''', data)
                 self.conn.commit()
             else:
                 self.curr.execute('''
@@ -84,12 +86,13 @@ class Database:
                     final_res,
                     date
                 ) values(?,?,?,?,?,?,?,?,?,?,?,?,?)
-                ''')
+                ''', data)
         except Exception as e:
             print(f"Error occured with inserting record! {e}")
 
     def __del__(self):
         try:
+            # Destructor will close db
             self.conn.close()
         except:
             print("Error occured closing DB!")
