@@ -68,7 +68,6 @@ class Database:
                     date) 
                     values(?,?,?,?,?,?,?,?,?,?,?);
                 ''', data)
-                self.conn.commit()
             else:
                 self.curr.execute('''
                 INSERT INTO rev(
@@ -87,6 +86,7 @@ class Database:
                     date
                 ) values(?,?,?,?,?,?,?,?,?,?,?,?,?)
                 ''', data)
+            self.conn.commit()
         except Exception as e:
             print(f"Error occured with inserting record! {e}")
 
