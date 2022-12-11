@@ -69,15 +69,13 @@ class Extractor:
     def parseResultPage(self, usn, reval):
         resultPage = self.session.post(self.resultUrl, data={
                                        'Token': self.token, 'lns': usn, 'captchacode': self.captchaCode}, headers=self.headers, verify=False)
+        soup = BeautifulSoup(resultPage.text, 'html.parser')
         whitespaceRegEx = re.compile(r'\s+')
         try:
             # Making sure the result page is fetched
-            if (len(resultPage.text) > 200):
-                soup = BeautifulSoup(resultPage.text, 'html.parser')
-                # Adding records to DB after parsing result page
+            if (len(resultPage.text) > 500):            # Adding records to DB after parsing result page
                 tables = soup.find_all(
                     'div', {"class": "col-md-12 table-responsive"})
-
                 # Fetching Student Details
                 studentDetails = tables[0].table.find_all('b')
                 usn = studentDetails[1].next_sibling.strip()
@@ -93,6 +91,7 @@ class Extractor:
                         marksTable = semester.parent.parent.find_next_sibling()
                     else:
                         marksTable = semester.parent.find_next_sibling()
+
                     tableRow = marksTable.find_all(
                         'div', {'class': 'divTableRow'})
                     for row in range(1, len(tableRow)):
@@ -105,7 +104,9 @@ class Extractor:
                             reval, usn, name, sem, *cellData)
             else:
                 # Retry if captcha is wrong else USN is invalid
-                if(len(resultPage.text) < 130):
+                error = soup.find_all('script')[0]
+                captchaRegEx = re.compile(r'captcha', re.IGNORECASE)
+                if bool(captchaRegEx.search(error.text)):
                     self.extract(usn, reval)
         except Exception as e:
             print("Error occured while parsing result!", e)
