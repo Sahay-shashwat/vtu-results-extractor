@@ -16,12 +16,17 @@
     <div class="main">
         <div class="container">
             <h1>VTU Results Extractor</h1>
-            <input type="text" id="link" placeholder="Enter results link">
-            <input id="usn" type="text" placeholder="Enter comma separated USNs">
+            <input class="entry" type="text" id="link" placeholder="Enter results link">
+            <input class="entry" id="usn" type="text" placeholder="Enter comma separated USNs">
             <div class="row">
                 <button class="btn btn-1 btn-1e" id="extract" onclick="extract()">Extract</button>
                 <button class="btn btn-1 btn-1e" id="generate" onclick="generate()">Generate</button>
             </div>
+            <div>
+                <input class="reval" type="checkbox" id="reval" name="reval">
+                <label for="reval">Is this revaluation result?</label>
+            </div>
+
             <p class="credits">For any issues, contact <span class="email"><a
                         href="https://rijuthmenon.me">rir20cs@cmrit.ac.in</a></span></p>
 
