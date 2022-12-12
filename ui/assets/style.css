@@ -144,3 +144,18 @@ th {
   font-size: 21px;
   margin-bottom: 10px;
 }
+
+.extract {
+  display: none;
+  margin-top: 10%;
+}
+
+.extract span {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  font-weight: 500;
+  background-color: rgba(0, 245, 131, 0.562);
+  color: #ffffff;
+}
