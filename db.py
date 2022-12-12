@@ -8,7 +8,7 @@ class Database:
     def __init__(self, path):
         # Initializing important vars
         self.path = path
-        self.conn = sqlite3.connect(os.path.join(self.path, 'sem.db'))
+        self.conn = sqlite3.connect(os.path.join(self.path, 'sem-results.db'))
         self.curr = self.conn.cursor()
         try:
             # Creating tables for reval and reg because they have different formats
