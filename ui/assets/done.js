@@ -4,14 +4,25 @@ function createTable()
     len = localStorage.getItem("len");
     toastr["success"]("", `${len} USN's were successful!`);
     data = localStorage.getItem("skipped").split(",");
-    for (var i = 0; i < data.length; i++)
+    if (data.length == 1 && data[0] == "")
     {
         let tr = document.createElement('tr');
-
         let td = document.createElement('td');
-        td.textContent = data[i];
+        td.textContent = "NO USN was skipped!";
         tr.appendChild(td);
         table.appendChild(tr);
+    }
+    else
+    {
+        for (var i = 0; i < data.length; i++)
+        {
+            let tr = document.createElement('tr');
+
+            let td = document.createElement('td');
+            td.textContent = data[i];
+            tr.appendChild(td);
+            table.appendChild(tr);
+        }
     }
 }
 
