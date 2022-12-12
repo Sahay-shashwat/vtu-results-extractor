@@ -7,7 +7,7 @@ from datetime import date
 from db import Database
 import re
 import eel
-from requests.compat import urljoin
+import time
 
 eel.init('ui')
 
@@ -28,9 +28,11 @@ def extract(usns, link, reval):
         for usn in usnList:
             if re.match(r'\d[a-zA-z]{2}\d{2}[a-zA-z]{2}\d{3,}', usn):
                 res = extractorObj.extract(usn.lower(), reval)
+                eel.queue(usn)
                 if res == False:
                     skipped.append(usn)
-
+                else:
+                    time.sleep(3)
             else:
                 skipped.append(usn)
         return {"status": True, "len": len(usnList)-len(skipped), "skipped": skipped}
@@ -63,4 +65,5 @@ def generate(usns, reval):
         return {"status": False}
 
 
+# eel.queue('1cr20cs111')
 eel.start('index.html')
