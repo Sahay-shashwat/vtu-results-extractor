@@ -26,8 +26,8 @@ class Extractor:
             self.headers = {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
             pytesseract.pytesseract.tesseract_cmd = self.tesseractPath
-            self.indexUrl = urljoin(self.baseDomain, indexUrl)
-            self.resultUrl = urljoin(self.baseDomain, resultUrl)
+            self.indexUrl = indexUrl
+            self.resultUrl = resultUrl
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             self.db = Database(os.getcwd())
         except:
@@ -58,7 +58,6 @@ class Extractor:
     def parseIndexPage(self):
         try:
             # Fetching index page [where you enter USN]
-
             indexPage = self.session.get(
                 self.indexUrl, headers=self.headers, verify=False)
             soup = BeautifulSoup(indexPage.content, "html.parser")
@@ -76,7 +75,7 @@ class Extractor:
         whitespaceRegEx = re.compile(r'\s+')
         try:
             # Making sure the result page is fetched
-            if ((len(resultPage.text) > 500) and (self.indexPage != resultPage.text) and resultPage.ok):
+            if ((len(resultPage.text) > 500) and (len(self.indexPage) != len(resultPage.text)) and resultPage.ok):
                 # Adding records to DB after parsing result page
                 tables = soup.find_all(
                     'div', {"class": "col-md-12 table-responsive"})
@@ -106,19 +105,24 @@ class Extractor:
                         # Inserting detail into db
                         self.db.insertRecord(
                             reval, usn, name, sem, *cellData)
+                return True
             else:
                 # Retry if captcha is wrong else USN is invalid
                 error = soup.find_all('script')[0]
                 captchaRegEx = re.compile(r'captcha', re.IGNORECASE)
                 if bool(captchaRegEx.search(error.text)):
-                    self.extract(usn, reval)
+                    return self.extract(usn, reval)
+                else:
+                    return False
+                # return False
         except Exception as e:
             print("Error occured while parsing result!", e)
+            return False
 
     def extract(self, usn, reval):
         try:
             self.parseIndexPage()
             self.decodeCaptcha()
-            self.parseResultPage(usn, reval)
+            return self.parseResultPage(usn, reval)
         except Exception as e:
             print('Error occured while performing extraction!', e)
