@@ -31,7 +31,7 @@ class Extractor:
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             self.db = Database(os.getcwd())
         except:
-            print("Error while initializing extractor!")
+            raise Exception("Error while initializing extractor!")
 
     def decodeCaptcha(self):
         try:
@@ -53,7 +53,7 @@ class Extractor:
                 '[\W_]+', '', pytesseract.image_to_string(pil_img))
             self.captchaCode = captcha_code
         except:
-            print("Error occured while decoding captcha!")
+            raise Exception("Error occured while decoding captcha!")
 
     def parseIndexPage(self):
         try:
@@ -66,7 +66,7 @@ class Extractor:
             self.token = soup.find('input')['value']
             self.indexPage = indexPage.text
         except:
-            print("Error while parsing Index page!")
+            raise Exception("Error while parsing Index page!")
 
     def parseResultPage(self, usn, reval):
         resultPage = self.session.post(self.resultUrl, data={
@@ -114,9 +114,8 @@ class Extractor:
                     return self.extract(usn, reval)
                 else:
                     return False
-                # return False
         except Exception as e:
-            print("Error occured while parsing result!", e)
+            print("Error occured while parsing result!")
             return False
 
     def extract(self, usn, reval):
@@ -125,4 +124,5 @@ class Extractor:
             self.decodeCaptcha()
             return self.parseResultPage(usn, reval)
         except Exception as e:
-            print('Error occured while performing extraction!', e)
+            print(e)
+            return False
