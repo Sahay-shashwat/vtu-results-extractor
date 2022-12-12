@@ -28,7 +28,7 @@ function extract()
 {
     var resultLink = document.getElementById('link').value;
     var usn = document.getElementById('usn').value;
-
+    var reval = document.getElementById('reval').checked;
     if (!/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(resultLink))
     {
         toastr["error"]("", "Please enter a valid link!");
@@ -39,7 +39,7 @@ function extract()
     }
     else
     {
-        eel.extract(usn, resultLink)(function (ret)
+        eel.extract(usn, resultLink, reval)(function (ret)
         {
             if (ret.status)
             {
@@ -59,13 +59,15 @@ function extract()
 function generate()
 {
     var usn = document.getElementById('usn').value;
+    var reval = document.getElementById('reval').checked;
+
     if (!/^\w+(,\w+)*$/.test(usn))
     {
         toastr["error"]("", "Please enter valid USN's!");
     }
     else
     {
-        eel.generate(usn)(function (ret)
+        eel.generate(usn, reval)(function (ret)
         {
             if (ret.status)
             {
