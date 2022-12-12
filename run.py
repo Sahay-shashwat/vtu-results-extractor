@@ -1,3 +1,4 @@
+from operator import index
 from enums import ExtractorEnums as Const
 from extractor import Extractor
 from file import File
@@ -12,21 +13,24 @@ eel.init('ui')
 
 
 @eel.expose
-def extract(usns, link):
+def extract(usns, link, reval):
     try:
         skipped = []
+        link = link.replace('https://', '').replace('http://', '')
         resultCode = link.split('/')[1]
-        indexUrl = urljoin(Const.BASE_DOMAIN.value,
-                           resultCode, Const.INDEX_FILE.value)
-        resultUrl = urljoin(Const.BASE_DOMAIN.value,
-                            resultCode, Const.RESULT_FILE.value)
+        indexUrl = "/".join([Const.BASE_DOMAIN.value,
+                            resultCode, Const.INDEX_FILE.value])
+        resultUrl = "/".join([Const.BASE_DOMAIN.value,
+                             resultCode, Const.RESULT_FILE.value])
         usnList = [usn.lower() for usn in usns.split(",")]
         extractorObj = Extractor(Const.BASE_DOMAIN.value,
                                  indexUrl, resultUrl)
         for usn in usnList:
             if re.match(r'\d[a-zA-z]{2}\d{2}[a-zA-z]{2}\d{3,}', usn):
-                extractorObj.extract(usn.lower(), False)
-                pass
+                res = extractorObj.extract(usn.lower(), reval)
+                if res == False:
+                    skipped.append(usn)
+
             else:
                 skipped.append(usn)
         return {"status": True, "len": len(usnList)-len(skipped), "skipped": skipped}
@@ -36,20 +40,20 @@ def extract(usns, link):
 
 
 @eel.expose
-def generate(usns):
+def generate(usns, reval):
     try:
         skipped = []
         db = Database(os.getcwd())
         usnList = [usn.lower() for usn in usns.split(",")]
         for usn in usnList:
-            maxSem = db.findMaxSem(usn.lower(), False)[0][0]
+            maxSem = db.findMaxSem(usn.lower(), reval)[0][0]
             # Can be none if USN doesn't exist
             if maxSem:
                 for i in range(1, int(maxSem)+1):
                     fileObj = File(
-                        i, False, Const.OUTPUT_FOLDER_NAME.value)
+                        i, reval, Const.OUTPUT_FOLDER_NAME.value)
                     fileObj.addData(db.getData(
-                        usn.lower(), False, i, str(date.today())))
+                        usn.lower(), reval, i, str(date.today())))
             else:
                 skipped.append(usn)
         return {"status": True, "len": len(usnList)-len(skipped), "skipped": skipped}
