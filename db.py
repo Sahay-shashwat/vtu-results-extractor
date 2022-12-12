@@ -46,7 +46,7 @@ class Database:
 ''')
             self.conn.commit()
         except:
-            print("An error occured with DB initialization!")
+            raise Exception("An error occured with DB initialization!")
 
     def insertRecord(self, reval, usn, name, sem, *args):
         try:
@@ -88,7 +88,7 @@ class Database:
                 ''', data)
             self.conn.commit()
         except Exception as e:
-            print(f"Error occured with inserting record! {e}")
+            raise Exception(f"Error occured with inserting record!")
 
     def getData(self, usn, reval, sem, date):
         try:
@@ -99,7 +99,7 @@ class Database:
             self.curr.execute(statement)
             return self.curr.fetchall()
         except:
-            print("Error occured while selecting data!")
+            raise Exception("Error occured while selecting data!")
 
     def findMaxSem(self, usn, reval):
         try:
@@ -111,11 +111,11 @@ class Database:
             self.curr.execute(statement)
             return self.curr.fetchall()
         except:
-            print('Error occured fetching max sem')
+            raise Exception('Error occured fetching max sem')
 
     def __del__(self):
         try:
             # Destructor will close db
             self.conn.close()
         except:
-            print("Error occured closing DB!")
+            raise Exception("Error occured closing DB!")
