@@ -82,3 +82,10 @@ function generate()
         });
     }
 }
+
+eel.expose(queue)
+function queue(usn)
+{
+    document.getElementById("queue").style.display = "block";
+    document.getElementById("queue-usn").textContent = usn.toUpperCase();
+}
