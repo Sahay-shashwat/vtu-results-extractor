@@ -16,7 +16,9 @@ h1 {
   align-items: center;
   height: 100vh;
 }
-
+.row-min {
+  display: flex;
+}
 .container {
   display: flex;
   flex-direction: column;
@@ -24,7 +26,7 @@ h1 {
   align-items: center;
 }
 
-input {
+.entry {
   height: 50px;
   background-color: #363b41;
   border-radius: 4px;
@@ -39,7 +41,7 @@ input {
   margin-bottom: 10px;
 }
 
-input:focus {
+.entry:focus {
   transform: scale(1.09);
 }
 .btn {
@@ -123,6 +125,15 @@ a:hover {
 .row {
   margin-top: 10%;
   margin-bottom: 10%;
+}
+
+input[type="checkbox"] {
+  width: 18px; /*Desired width*/
+  height: 18px; /*Desired height*/
+  cursor: pointer;
+  vertical-align: middle;
+  position: relative;
+  bottom: 2px;
 }
 
 table,
