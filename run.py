@@ -10,6 +10,7 @@ import eel
 import time
 
 eel.init('ui')
+db = Database(os.getcwd())
 
 
 @eel.expose
@@ -26,13 +27,16 @@ def extract(usns, link, reval):
         extractorObj = Extractor(Const.BASE_DOMAIN.value,
                                  indexUrl, resultUrl)
         for usn in usnList:
+            # Checking if USN is valid
             if re.match(r'\d[a-zA-z]{2}\d{2}[a-zA-z]{2}\d{3,}', usn):
-                res = extractorObj.extract(usn.lower(), reval)
-                eel.queue(usn)
-                if res == False:
-                    skipped.append(usn)
-                else:
-                    time.sleep(3)
+                # Checking is USN is not in db
+                if not db.doesUsnExist(usn, reval):
+                    res = extractorObj.extract(usn.lower(), reval)
+                    eel.queue(usn)
+                    if res == False:
+                        skipped.append(usn)
+                    else:
+                        time.sleep(3)
             else:
                 skipped.append(usn)
         return {"status": True, "len": len(usnList)-len(skipped), "skipped": skipped}
@@ -45,7 +49,6 @@ def extract(usns, link, reval):
 def generate():
     try:
         skipped = []
-        db = Database(os.getcwd())
         reg, rev = db.getAllUsn()
         # Generating for reg files
         for usn in reg:
@@ -57,7 +60,7 @@ def generate():
                     fileObj = File(
                         i, reval, Const.OUTPUT_FOLDER_NAME.value)
                     fileObj.addData(db.getData(
-                        usn.lower(), reval, i, str(date.today())))
+                        usn.lower(), reval, i))
             else:
                 skipped.append(usn)
         # Generating for reval files
@@ -70,10 +73,10 @@ def generate():
                     fileObj = File(
                         i, reval, Const.OUTPUT_FOLDER_NAME.value)
                     fileObj.addData(db.getData(
-                        usn.lower(), reval, i, str(date.today())))
+                        usn.lower(), reval, i))
             else:
                 skipped.append(usn)
-        return {"status": True, "len": len(usnList)-len(skipped), "skipped": skipped}
+        return {"status": True, "len": (len(reg)+len(rev))-len(skipped), "skipped": skipped}
 
     except:
         print("Error occured while generating!")
@@ -83,11 +86,12 @@ def generate():
 @eel.expose
 def truncate():
     try:
-        db = Database(os.getcwd())
-        print(db.getAllUsn())
-        return {"status": True}
-    except:
-        print("Error occured while truncating!")
+        if db.truncate():
+            return {"status": True}
+        else:
+            return {"status": False}
+    except Exception as e:
+        print("Error occured while truncating!", e)
         return {"status": False}
 
 
