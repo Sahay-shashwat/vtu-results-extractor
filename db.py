@@ -90,23 +90,40 @@ class Database:
         except Exception as e:
             raise Exception(f"Error occured with inserting record!")
 
-    def getData(self, usn, reval, sem, date):
+    def getData(self, usn, reval, sem):
         try:
             if not reval:
-                statement = f'SELECT * from reg WHERE usn="{usn}" AND sem={sem} AND date="{date}"'
+                statement = f'SELECT * from reg WHERE usn="{usn}" AND sem={sem}'
             else:
-                statement = f'SELECT * from rev WHERE usn="{usn}" AND sem={sem} AND date="{date}"'
+                statement = f'SELECT * from rev WHERE usn="{usn}" AND sem={sem}'
             self.curr.execute(statement)
             return self.curr.fetchall()
         except:
             raise Exception("Error occured while selecting data!")
 
+    def doesUsnExist(self, usn, reval):
+        try:
+            if not reval:
+                statement = f'SELECT * from reg WHERE usn="{usn}"'
+            else:
+                statement = f'SELECT * from rev WHERE usn="{usn}"'
+
+            self.curr.execute(statement)
+            data = self.curr.fetchall()
+
+            if len(data) >= 1:
+                return True
+            else:
+                return False
+        except Exception as e:
+            raise Exception("Error occured while checking USN!")
+
     def findMaxSem(self, usn, reval):
         try:
             if not reval:
-                statement = f'SELECT max(sem) from reg WHERE usn="{usn}" AND date="{str(date.today())}"'
+                statement = f'SELECT max(sem) from reg WHERE usn="{usn}"'
             else:
-                statement = f'SELECT max(sem) from rev WHERE usn="{usn}" AND date="{str(date.today())}"'
+                statement = f'SELECT max(sem) from rev WHERE usn="{usn}"'
 
             self.curr.execute(statement)
             return self.curr.fetchall()
