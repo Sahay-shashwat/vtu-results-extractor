@@ -127,6 +127,17 @@ class Database:
         except:
             raise Exception("Error occured while fetching all USN's!")
 
+    def truncate(self):
+        try:
+            statement = 'DELETE from reg'
+            self.curr.execute(statement)
+            statement = 'DELETE from rev'
+            self.curr.execute(statement)
+            self.conn.commit()
+            return True
+        except:
+            raise Exception("Error occured while truncating!")
+
     def __del__(self):
         try:
             # Destructor will close db
