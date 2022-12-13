@@ -80,4 +80,15 @@ def generate():
         return {"status": False}
 
 
+@eel.expose
+def truncate():
+    try:
+        db = Database(os.getcwd())
+        print(db.getAllUsn())
+        return {"status": True}
+    except:
+        print("Error occured while truncating!")
+        return {"status": False}
+
+
 eel.start('index.html')
