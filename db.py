@@ -113,6 +113,20 @@ class Database:
         except:
             raise Exception('Error occured fetching max sem')
 
+    def getAllUsn(self):
+        try:
+            regStatement = f'SELECT DISTINCT usn from reg'
+            revStatement = f'SELECT DISTINCT usn from rev'
+            self.curr.execute(regStatement)
+            temp = self.curr.fetchall()
+            reg = [usn for sublist in temp for usn in sublist]
+            self.curr.execute(revStatement)
+            temp = self.curr.fetchall()
+            reval = [usn for sublist in temp for usn in sublist]
+            return reg, reval
+        except:
+            raise Exception("Error occured while fetching all USN's!")
+
     def __del__(self):
         try:
             # Destructor will close db
