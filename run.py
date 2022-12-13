@@ -42,12 +42,27 @@ def extract(usns, link, reval):
 
 
 @eel.expose
-def generate(usns, reval):
+def generate():
     try:
         skipped = []
         db = Database(os.getcwd())
-        usnList = [usn.lower() for usn in usns.split(",")]
-        for usn in usnList:
+        reg, rev = db.getAllUsn()
+        # Generating for reg files
+        for usn in reg:
+            reval = False
+            maxSem = db.findMaxSem(usn.lower(), reval)[0][0]
+            # Can be none if USN doesn't exist
+            if maxSem:
+                for i in range(1, int(maxSem)+1):
+                    fileObj = File(
+                        i, reval, Const.OUTPUT_FOLDER_NAME.value)
+                    fileObj.addData(db.getData(
+                        usn.lower(), reval, i, str(date.today())))
+            else:
+                skipped.append(usn)
+        # Generating for reval files
+        for usn in rev:
+            reval = True
             maxSem = db.findMaxSem(usn.lower(), reval)[0][0]
             # Can be none if USN doesn't exist
             if maxSem:
@@ -65,5 +80,15 @@ def generate(usns, reval):
         return {"status": False}
 
 
-# eel.queue('1cr20cs111')
+@eel.expose
+def truncate():
+    try:
+        db = Database(os.getcwd())
+        print(db.getAllUsn())
+        return {"status": True}
+    except:
+        print("Error occured while truncating!")
+        return {"status": False}
+
+
 eel.start('index.html')
