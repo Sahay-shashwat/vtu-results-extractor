@@ -58,29 +58,23 @@ function extract()
 
 function generate()
 {
-    var usn = document.getElementById('usn').value;
-    var reval = document.getElementById('reval').checked;
 
-    if (!/^\w+(,\w+)*$/.test(usn))
+
+
+    eel.generate()(function (ret)
     {
-        toastr["error"]("", "Please enter valid USN's!");
-    }
-    else
-    {
-        eel.generate(usn, reval)(function (ret)
+        if (ret.status)
         {
-            if (ret.status)
-            {
-                localStorage.setItem('skipped', ret.skipped)
-                localStorage.setItem('len', ret.len)
-                window.location.replace('done.html')
-            }
-            else
-            {
-                toastr["error"]("", "Error occured while generating!");
-            }
-        });
-    }
+            localStorage.setItem('skipped', ret.skipped)
+            localStorage.setItem('len', ret.len)
+            window.location.replace('done.html')
+        }
+        else
+        {
+            toastr["error"]("", "Error occured while generating!");
+        }
+    });
+
 }
 
 function truncate()
