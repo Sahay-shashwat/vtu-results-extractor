@@ -17,7 +17,7 @@ h1 {
   height: 100vh;
 }
 .row-min {
-  display: flex;
+  margin-top: 20px;
 }
 .container {
   display: flex;
@@ -51,7 +51,7 @@ h1 {
   color: inherit;
   background: none;
   cursor: pointer;
-  padding: 7px 40px;
+  padding: 7px 20px;
   display: inline-block;
   margin: 10px;
   text-transform: uppercase;
@@ -118,13 +118,15 @@ a:hover {
   font-size: 21px;
   transition: all 1s;
 }
-.credits {
-  margin-top: 10%;
-}
 
 .row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 70%;
   margin-top: 10%;
-  margin-bottom: 10%;
+  margin-bottom: 5%;
+  align-items: center;
+  justify-content: center;
 }
 
 input[type="checkbox"] {
@@ -147,7 +149,6 @@ th {
 
 .extract {
   display: none;
-  margin-top: 10%;
 }
 
 .extract span {
