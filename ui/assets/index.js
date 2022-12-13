@@ -83,3 +83,42 @@ function generate()
     }
 }
 
+function truncate()
+{
+    Swal.fire({
+        title: 'Are you sure?',
+        html: "You will <b>lose all data</b> extracted so far!<br/>Please be careful!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) =>
+    {
+        if (result.isConfirmed)
+        {
+            eel.truncate()(function (ret)
+            {
+                if (ret.status)
+                {
+                    Swal.fire(
+                        'Deleted!',
+                        'Data has been erased!',
+                        'success'
+                    )
+                }
+                else
+                {
+                    Swal.fire(
+                        'Error!',
+                        'An error occured!',
+                        'error'
+                    )
+                }
+
+            });
+        }
+
+
+    });
+}
