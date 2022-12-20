@@ -13,6 +13,8 @@ This is a tool built using Python in order to extract and export results of mult
  - This tool has been packaged as a windows binary file (exe file) which can be downloaded here.
  - Please ensure that you do not spam the results website, ideally you do not want to scrape more than 30 USN's in one sitting.
  - **For reval results** please ensure you __check the box__. This is not necessary when generating the csv/excel file.
+ - Once you're done extracting, press the `Generate` button to output all the data in database as a csv/excel file.
+ - The `Clear` button will erase all data in the database.
 
 
  
