@@ -11,6 +11,7 @@ import re
 from urllib.parse import urljoin
 from db import Database
 import os
+import time
 from requests.packages import urllib3
 
 
@@ -111,6 +112,8 @@ class Extractor:
                 error = soup.find_all('script')[0]
                 captchaRegEx = re.compile(r'captcha', re.IGNORECASE)
                 if bool(captchaRegEx.search(error.text)):
+                    # Adding a delay of 10 seconds before respamming captcha
+                    time.sleep(15)
                     return self.extract(usn, reval)
                 else:
                     return False
