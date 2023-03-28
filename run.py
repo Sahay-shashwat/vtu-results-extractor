@@ -36,7 +36,7 @@ def extract(usns, link, reval):
                     if res == False:
                         skipped.append(usn)
                     else:
-                        time.sleep(20)
+                        time.sleep(10)
             else:
                 skipped.append(usn)
         return {"status": True, "len": len(usnList)-len(skipped), "skipped": skipped}
